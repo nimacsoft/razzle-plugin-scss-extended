@@ -1,0 +1,26 @@
+{
+  "name": "razzle-plugin-scss-extended",
+  "version": "1.0.1-0",
+  "description": "Razzle plugin to load Scss files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nimacsoft/razzle-plugin-scss-extended.git"
+  },
+  "keywords": [
+    "razzle",
+    "plugin",
+    "post-css",
+    "cssnano",
+    "scss"
+  ],
+  "author": "Nima Arefi <nimaarefi@outlook.com> (https://twitter.com/nima_arf)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nimacsoft/razzle-plugin-scss-extended/issues"
+  },
+  "homepage": "https://github.com/nimacsoft/razzle-plugin-scss-extended#readme"
+}
