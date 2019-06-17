@@ -10,6 +10,19 @@
     "type": "git",
     "url": "git+https://github.com/nimacsoft/razzle-plugin-scss-extended.git"
   },
+  "dependencies": {
+    "autoprefixer": "^8.6.2",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass-chokidar": "^1.3.0",
+    "postcss-flexbugs-fixes": "^3.3.1",
+    "postcss-scss": "^1.0.5",
+    "resolve-url-loader": "^2.3.0",
+    "sass-loader": "^7.0.3",
+    "cssnano": "^4.1.10",
+    "postcss-pxtorem": "^4.0.1",
+    "sass-resources-loader": "^2.0.1",
+    "purgecss-webpack-plugin": "^1.5.0"
+  },
   "keywords": [
     "razzle",
     "plugin",
