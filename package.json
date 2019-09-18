@@ -1,6 +1,6 @@
 {
   "name": "razzle-plugin-scss-extended",
-  "version": "1.0.1-1",
+  "version": "1.0.1",
   "description": "Razzle plugin to load Scss files",
   "main": "index.js",
   "scripts": {
