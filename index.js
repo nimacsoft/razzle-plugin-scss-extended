@@ -49,13 +49,14 @@ const defaultOptions = {
     dev: {
       sourceMap: true,
       importLoaders: 1,
-      modules: false
+      modules: false,
+      onlyLocals: false
     },
     prod: {
       sourceMap: false,
       importLoaders: 1,
       modules: false,
-      minimize: true
+      onlyLocals: false
     }
   },
   style: {},
@@ -92,7 +93,7 @@ module.exports = (
 
   const cssLoader = {
     loader: require.resolve("css-loader"),
-    options: options.css[constantEnv]
+    options: isServer ? Object.assign({}, options.css[constantEnv], { onlyLocals: true }) : options.css[constantEnv]
   };
 
   const resolveUrlLoader = {
@@ -122,22 +123,17 @@ module.exports = (
 
   const loaders = isServer
     ? [
-        {
-          loader: require.resolve("css-loader/locals"),
-          options: options.css[constantEnv]
-        },
+        cssLoader,
         resolveUrlLoader,
         postCssLoader,
-        sassLoader,
-        sassResourcesLoader
+        sassLoader
       ]
     : [
         dev ? styleLoader : MiniCssExtractPlugin.loader,
         cssLoader,
         postCssLoader,
         resolveUrlLoader,
-        sassLoader,
-        sassResourcesLoader
+        sassLoader
       ];
 
   if (options.sassResources.resources !== "") {
