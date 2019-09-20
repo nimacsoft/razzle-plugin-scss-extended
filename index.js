@@ -144,7 +144,8 @@ module.exports = (
     ...config.module.rules,
     {
       test: /\.(sa|sc)ss$/,
-      use: loaders
+      use: loaders,
+      sideEffects: true,
     }
   ];
 
