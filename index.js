@@ -1,76 +1,78 @@
-const autoprefixer = require("autoprefixer");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const PostCssFlexBugFixes = require("postcss-flexbugs-fixes");
-const paths = require("razzle/config/paths");
-const PurgecssPlugin = require("purgecss-webpack-plugin");
-const cssnano = require("cssnano");
-const pxtorem = require("postcss-pxtorem");
-const glob = require("glob");
+const autoprefixer = require('autoprefixer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const PostCssFlexBugFixes = require('postcss-flexbugs-fixes');
+const paths = require('razzle/config/paths');
+const PurgecssPlugin = require('purgecss-webpack-plugin');
+const cssnano = require('cssnano');
+const pxtorem = require('postcss-pxtorem');
+const glob = require('glob');
 
 const defaultOptions = {
   postcss: {
     dev: {
       sourceMap: true,
-      ident: "postcss"
+      ident: 'postcss',
     },
     prod: {
       sourceMap: false,
-      ident: "postcss"
+      ident: 'postcss',
     },
     defaulPlugins: [
       PostCssFlexBugFixes,
       autoprefixer({
-        browsers: [">1%", "last 4 versions", "Firefox ESR", "not ie < 11"],
-        flexbox: "no-2009"
+        flexbox: 'no-2009',
       }),
       pxtorem({
-        replace: false
+        replace: false,
       }),
       cssnano({
-        preset: "default"
-      })
+        preset: 'default',
+      }),
     ],
-    plugins: []
+    plugins: [],
   },
   sass: {
     dev: {
       sourceMap: true,
-      includePaths: [paths.appNodeModules]
+      sassOptions: {
+        includePaths: [paths.appNodeModules],
+      },
     },
     prod: {
       // XXX Source maps are required for the resolve-url-loader to properly
       // function. Disable them in later stages if you do not want source maps.
       sourceMap: true,
-      sourceMapContents: false,
-      includePaths: [paths.appNodeModules]
-    }
+      sassOptions: {
+        includePaths: [paths.appNodeModules],
+      },
+    },
   },
   css: {
     dev: {
       sourceMap: true,
       importLoaders: 1,
       modules: false,
-      onlyLocals: false
+      onlyLocals: false,
     },
     prod: {
       sourceMap: false,
       importLoaders: 1,
       modules: false,
-      onlyLocals: false
-    }
+      onlyLocals: false,
+    },
   },
   style: {},
   resolveUrl: {
     dev: {},
-    prod: {}
+    prod: {},
   },
   sassResources: {
-    resources: ""
+    resources: '',
   },
   purgecssPlugin: {
-    paths: glob.sync(paths.appSrc + "/**/*", { nodir: true }),
-    whitelistPatterns: []
-  }
+    paths: glob.sync(paths.appSrc + '/**/*', { nodir: true }),
+    whitelistPatterns: [],
+  },
 };
 
 module.exports = (
@@ -79,64 +81,61 @@ module.exports = (
   webpack,
   userOptions = {}
 ) => {
-  const isServer = target !== "web";
-  const constantEnv = dev ? "dev" : "prod";
+  const isServer = target !== 'web';
+  const constantEnv = dev ? 'dev' : 'prod';
 
   const config = Object.assign({}, defaultConfig);
 
   const options = Object.assign({}, defaultOptions, userOptions);
 
   const styleLoader = {
-    loader: require.resolve("style-loader"),
-    options: options.style
+    loader: require.resolve('style-loader'),
+    options: options.style,
   };
 
   const cssLoader = {
-    loader: require.resolve("css-loader"),
-    options: isServer ? Object.assign({}, options.css[constantEnv], { onlyLocals: true }) : options.css[constantEnv]
+    loader: require.resolve('css-loader'),
+    options: isServer
+      ? Object.assign({}, options.css[constantEnv], { onlyLocals: true })
+      : options.css[constantEnv],
   };
 
   const resolveUrlLoader = {
-    loader: require.resolve("resolve-url-loader"),
-    options: options.resolveUrl[constantEnv]
+    loader: require.resolve('resolve-url-loader'),
+    options: options.resolveUrl[constantEnv],
   };
 
   const postCssLoader = {
-    loader: require.resolve("postcss-loader"),
+    loader: require.resolve('postcss-loader'),
     options: Object.assign({}, options.postcss[constantEnv], {
       plugins: () =>
-        options.postcss.defaulPlugins.concat(options.postcss.plugins)
-    })
+        options.postcss.defaulPlugins.concat(options.postcss.plugins),
+    }),
   };
 
   const sassLoader = {
-    loader: require.resolve("sass-loader"),
-    options: options.sass[constantEnv]
+    loader: require.resolve('sass-loader'),
+    options: options.sass[constantEnv],
   };
 
   const sassResourcesLoader = {
-    loader: require.resolve("sass-resources-loader"),
-    options: options.sassResources
+    loader: require.resolve('sass-resources-loader'),
+    options: options.sassResources,
   };
 
   config.plugins.push(new PurgecssPlugin(options.purgecssPlugin));
 
   const loaders = isServer
-    ? [
-        cssLoader,
-        resolveUrlLoader,
-        postCssLoader,
-        sassLoader
-      ]
+    ? [cssLoader, resolveUrlLoader, postCssLoader, sassLoader]
     : [
         dev ? styleLoader : MiniCssExtractPlugin.loader,
         cssLoader,
         postCssLoader,
         resolveUrlLoader,
-        sassLoader
+        sassLoader,
       ];
 
-  if (options.sassResources.resources !== "") {
+  if (options.sassResources.resources !== '') {
     loaders.push(sassResourcesLoader);
   }
 
@@ -146,7 +145,7 @@ module.exports = (
       test: /\.(sa|sc)ss$/,
       use: loaders,
       sideEffects: true,
-    }
+    },
   ];
 
   return config;
